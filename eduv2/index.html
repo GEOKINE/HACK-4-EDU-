@@ -32,16 +32,24 @@
       font-weight: 800;
       font-size: 20px;
       color: var(--navy);
-    }
-    nav ul {
-      list-style: none;
       display: flex;
-      gap: 20px;
+      align-items: center;
+      gap: 10px;
     }
-    nav ul li a {
-      text-decoration: none;
-      color: var(--navy);
+    .logo-icon {
+      background: var(--navy);
+      color: var(--white);
+      padding: 6px 10px;
+      border-radius: 8px;
+    }
+    .cta-button {
+      background: var(--navy);
+      color: var(--white);
+      padding: 10px 18px;
+      border: none;
+      border-radius: var(--radius);
       font-weight: 600;
+      cursor: pointer;
     }
     .hero {
       text-align: center;
@@ -76,6 +84,11 @@
       max-width: 400px;
       flex: 1;
     }
+    .card h2 {
+      font-size: 20px;
+      margin-bottom: 20px;
+      color: var(--navy);
+    }
     label {
       display: block;
       margin-bottom: 8px;
@@ -83,7 +96,7 @@
       font-size: 14px;
       color: var(--gray);
     }
-    select, input, textarea {
+    input, textarea, select {
       width: 100%;
       padding: 12px;
       margin-bottom: 16px;
@@ -104,10 +117,22 @@
       font-weight: 600;
       cursor: pointer;
       width: 100%;
-      transition: background 0.2s ease;
+      transition: background 0.2s ease, transform 0.1s ease;
     }
     button:hover {
       background: var(--blue);
+    }
+    button:active {
+      background: var(--blue);
+      transform: scale(0.97);
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .acciones {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+      margin-top: 24px;
     }
     .tools {
       display: flex;
@@ -168,67 +193,43 @@
   </style>
 </head>
 <body>
+
   <header>
-    <div class="logo">🎙 AIVOX</div>
-    <nav>
-      <ul>
-        <li><a href="#">Inicio</a></li>
-        <li><a href="#">Proyectos</a></li>
-        <li><a href="#">Herramientas</a></li>
-        <li><a href="#">Contacto</a></li>
-      </ul>
-    </nav>
+    <div class="logo">
+      <div class="logo-icon">A</div>
+      AIVOX
+    </div>
+  
   </header>
 
   <section class="hero">
     <h1>Transforma la Educación con <span>AUDIO</span> interactivo</h1>
-    <p>Descubre el potencial del aprendizaje con mini-podcasts personalizados para docentes, tutores y estudiantes.</p>
+    <p>Desbloquea el potencial del aprendizaje con mini-podcasts personalizados para docentes, tutores y estudiantes.</p>
   </section>
+
   <section class="section">
     <div class="card">
       <h2>Generador de Mini-Podcasts</h2>
-      <label for="tema">Tema principal</label>
-      <select id="tema">
-        <option>Matemáticas</option>
-        <option>Ciencias</option>
-        <option>Historia</option>
-        <option>Lenguaje</option>
-      </select>
-
-      <label for="subtema">Subtemas</label>
-      <select id="subtema">
-        <option>Resta básica</option>
-        <option>Fracciones</option>
-        <option>Multiplicación</option>
-        <option>División</option>
-      </select>
-
-      <label for="duracion">Duración aproximada</label>
-      <select id="duracion">
-        <option>2 minutos</option>
-        <option>3 minutos</option>
-        <option>5 minutos</option>
-      </select>
-
-      <label for="estilo">Estilo de narración</label>
-      <select id="estilo">
-        <option>Sándalo Silvestre</option>
-        <option>Cópico Aurora Boreal</option>
-        <option>Clásico Académico</option>
-      </select>
-
-      <button onclick="document.getElementById('guion').style.display='block'">Generar Guión</button>
+      <label>Tema principal</label>
+      <input type="text" id="tema" placeholder="Ej: Suma y resta" />
+      <label>Subtemas y especificaciones</label>
+      <input type="text" id="subtemas" placeholder="Ej: Tipos de suma y resta, acarreo, pedir prestado" />
+      <label>Duración estimada (minutos)</label>
+      <input type="number" id="duracion" placeholder="3" />
+      <button onclick="generarGuion()">Generar Guion</button>
     </div>
 
-    <div class="card" id="guion" style="display:none;">
+    <div class="card">
       <h2>DEMO</h2>
-      <p><strong>Guión generado:</strong> Explorando la resta</p>
-      <p>¿Sabías que la resta es una de las operaciones básicas en matemáticas? Hoy exploraremos cómo funciona y por qué es tan útil en la vida diaria. Imagina que tienes 5 manzanas y decides regalar 2. ¿Cuántas te quedan? ¡Exacto! 3 manzanas. Así de simple es la resta.</p>
-      <p><em>Estilo de narración: Sándalo Silvestre, Cópico Aurora Boreal</em></p>
-      <audio controls style="width:100%; margin-top:10px;">
-        <source src="#" type="audio/mpeg">
-        Tu navegador no soporta audio.
-      </audio>
+      <p><strong>Guion generado:</strong></p>
+      <textarea id="resultado" rows="6" placeholder="El guion aparecerá aquí..." readonly></textarea>
+      <audio id="audioPlayer" controls style="width:100%; margin-top:10px;"></audio>
+
+      <div class="acciones">
+        <button onclick="toggleLectura()">▶ Leer</button>
+        <button onclick="detenerLectura()">⏹ Detener</button>
+       
+      </div>
     </div>
   </section>
 
@@ -237,34 +238,52 @@
       <h3>Creador de Lecciones</h3>
       <p>Crea lecciones atractivas e interactivas</p>
     </div>
-    <div class="tool">
-      <h3>Editor de Audio</h3>
-      <p>Perfecciona y ajusta tus grabaciones</p>
-    </div>
+   
     <div class="tool">
       <h3>Biblioteca</h3>
       <p>Explora recursos educativos gratis</p>
     </div>
   </section>
-
-  <section class="testimonial">
-    <h4>Mario Santiago – Escuela Futuro Brillante</h4>
-    <p>“La herramienta ha revolucionado la forma en que mis estudiantes aprenden. ¡Es increíble!”</p>
-  </section>
-  <section class="testimonial">
-    <h4>Javier Mendoza – Academia Sahi</h4>
-    <p>“Nunca había visto a mis alumnos tan comprometidos con el aprendizaje.”</p>
-  </section>
-  <section class="testimonial">
-    <h4>Laura Ruiz – Instituto San Alfa</h4>
-    <p>“Los mini-podcasts han hecho que el contenido sea más accesible y entretenido.”</p>
-  </section>
+  
 
   <section class="final-cta">
     <h2>¿Listo para Revolucionar tu Enseñanza?</h2>
-    <p>Inscríbete ahora y transforma tu forma de enseñar con AIVOX</p>
-    <button class="cta-button">¡Empieza ahora y transforma!</button>
+     <footer style="text-align:center; padding:40px 20px; background:var(--white); font-size:14px; color:var(--gray);">
+    © 2025 AIVOX — Diseñado con precisión y alma digital
+  </footer>
+    
   </section>
 
+
+  <section class="section">
+    <div class="card" id="modalGuardar" style="display:none; max-width:600px;">
+      <h3>Guardar Podcast</h3>
+      <form id="formGuardar">
+        <label>Nombre del autor:</label>
+        <input type="text" id="autor" required>
+
+        <label>Tema:</label>
+        <input type="text" id="temaPodcast" required>
+
+        <label>Categoría:</label>
+        <select id="categoria" required>
+          <option value="Educativo">Educativo</option>
+          <option value="Entretenimiento">Entretenimiento</option>
+          <option value="Noticias">Noticias</option>
+          <option value="Tecnología">Tecnología</option>
+          <option value="Otro">Otro</option>
+        </select>
+
+        <div style="display:flex; gap:10px; margin-top:20px;">
+          <button type="submit">Guardar</button>
+          <button type="button" onclick="cerrarModal()">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <script src="js/script.js"></script>
+  <script src="js/audigen.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </body>
 </html>
