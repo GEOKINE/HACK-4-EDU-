@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AIVOX - Educación con Audio Interactivo</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --navy: #0a2540;
+      --blue: #1fa2d7;
+      --light: #f5f7fa;
+      --white: #ffffff;
+      --gray: #6b7280;
+      --radius: 12px;
+      font-family: 'Inter', sans-serif;
+    }
+    body {
+      margin: 0;
+      background: var(--light);
+      color: var(--navy);
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 24px 40px;
+      background: var(--white);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+    .logo {
+      font-weight: 800;
+      font-size: 20px;
+      color: var(--navy);
+    }
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 20px;
+    }
+    nav ul li a {
+      text-decoration: none;
+      color: var(--navy);
+      font-weight: 600;
+    }
+    .hero {
+      text-align: center;
+      padding: 60px 20px 40px;
+    }
+    .hero h1 {
+      font-size: 36px;
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+    .hero h1 span {
+      color: var(--blue);
+    }
+    .hero p {
+      font-size: 16px;
+      color: var(--gray);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .section {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 40px;
+      padding: 40px 20px;
+    }
+    .card {
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+      padding: 30px;
+      max-width: 400px;
+      flex: 1;
+    }
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--gray);
+    }
+    select, input, textarea {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 16px;
+      border-radius: var(--radius);
+      border: 1px solid #ccc;
+      font-size: 14px;
+    }
+    textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+    button {
+      background: var(--navy);
+      color: white;
+      padding: 12px;
+      border: none;
+      border-radius: var(--radius);
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+      transition: background 0.2s ease;
+    }
+    button:hover {
+      background: var(--blue);
+    }
+    .tools {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      padding: 40px 20px;
+      flex-wrap: wrap;
+    }
+    .tool {
+      background: var(--navy);
+      color: white;
+      padding: 20px;
+      border-radius: var(--radius);
+      text-align: center;
+      width: 220px;
+    }
+    .tool h3 {
+      margin-top: 10px;
+      font-size: 16px;
+    }
+    .tool p {
+      font-size: 13px;
+      color: #e5e7eb;
+    }
+    .testimonial {
+      background: var(--white);
+      padding: 20px;
+      border-radius: var(--radius);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      margin: 10px auto;
+      max-width: 600px;
+      text-align: center;
+    }
+    .testimonial h4 {
+      margin-bottom: 6px;
+      font-size: 16px;
+      color: var(--navy);
+    }
+    .testimonial p {
+      font-size: 14px;
+      color: var(--gray);
+    }
+    .final-cta {
+      background: var(--white);
+      text-align: center;
+      padding: 60px 20px;
+    }
+    .final-cta h2 {
+      font-size: 28px;
+      margin-bottom: 12px;
+      color: var(--navy);
+    }
+    .final-cta p {
+      font-size: 16px;
+      margin-bottom: 20px;
+      color: var(--gray);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">🎙 AIVOX</div>
+    <nav>
+      <ul>
+        <li><a href="#">Inicio</a></li>
+        <li><a href="#">Proyectos</a></li>
+        <li><a href="#">Herramientas</a></li>
+        <li><a href="#">Contacto</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <h1>Transforma la Educación con <span>AUDIO</span> interactivo</h1>
+    <p>Descubre el potencial del aprendizaje con mini-podcasts personalizados para docentes, tutores y estudiantes.</p>
+  </section>
+  <section class="section">
+    <div class="card">
+      <h2>Generador de Mini-Podcasts</h2>
+      <label for="tema">Tema principal</label>
+      <select id="tema">
+        <option>Matemáticas</option>
+        <option>Ciencias</option>
+        <option>Historia</option>
+        <option>Lenguaje</option>
+      </select>
+
+      <label for="subtema">Subtemas</label>
+      <select id="subtema">
+        <option>Resta básica</option>
+        <option>Fracciones</option>
+        <option>Multiplicación</option>
+        <option>División</option>
+      </select>
+
+      <label for="duracion">Duración aproximada</label>
+      <select id="duracion">
+        <option>2 minutos</option>
+        <option>3 minutos</option>
+        <option>5 minutos</option>
+      </select>
+
+      <label for="estilo">Estilo de narración</label>
+      <select id="estilo">
+        <option>Sándalo Silvestre</option>
+        <option>Cópico Aurora Boreal</option>
+        <option>Clásico Académico</option>
+      </select>
+
+      <button onclick="document.getElementById('guion').style.display='block'">Generar Guión</button>
+    </div>
+
+    <div class="card" id="guion" style="display:none;">
+      <h2>DEMO</h2>
+      <p><strong>Guión generado:</strong> Explorando la resta</p>
+      <p>¿Sabías que la resta es una de las operaciones básicas en matemáticas? Hoy exploraremos cómo funciona y por qué es tan útil en la vida diaria. Imagina que tienes 5 manzanas y decides regalar 2. ¿Cuántas te quedan? ¡Exacto! 3 manzanas. Así de simple es la resta.</p>
+      <p><em>Estilo de narración: Sándalo Silvestre, Cópico Aurora Boreal</em></p>
+      <audio controls style="width:100%; margin-top:10px;">
+        <source src="#" type="audio/mpeg">
+        Tu navegador no soporta audio.
+      </audio>
+    </div>
+  </section>
+
+  <section class="tools">
+    <div class="tool">
+      <h3>Creador de Lecciones</h3>
+      <p>Crea lecciones atractivas e interactivas</p>
+    </div>
+    <div class="tool">
+      <h3>Editor de Audio</h3>
+      <p>Perfecciona y ajusta tus grabaciones</p>
+    </div>
+    <div class="tool">
+      <h3>Biblioteca</h3>
+      <p>Explora recursos educativos gratis</p>
+    </div>
+  </section>
+
+  <section class="testimonial">
+    <h4>Mario Santiago – Escuela Futuro Brillante</h4>
+    <p>“La herramienta ha revolucionado la forma en que mis estudiantes aprenden. ¡Es increíble!”</p>
+  </section>
+  <section class="testimonial">
+    <h4>Javier Mendoza – Academia Sahi</h4>
+    <p>“Nunca había visto a mis alumnos tan comprometidos con el aprendizaje.”</p>
+  </section>
+  <section class="testimonial">
+    <h4>Laura Ruiz – Instituto San Alfa</h4>
+    <p>“Los mini-podcasts han hecho que el contenido sea más accesible y entretenido.”</p>
+  </section>
+
+  <section class="final-cta">
+    <h2>¿Listo para Revolucionar tu Enseñanza?</h2>
+    <p>Inscríbete ahora y transforma tu forma de enseñar con AIVOX</p>
+    <button class="cta-button">¡Empieza ahora y transforma!</button>
+  </section>
+
+</body>
+</html>

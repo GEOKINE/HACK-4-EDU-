@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Reproductor Minimalista Simétrico Final</title>
+<style>
+    /* Estilos para el look minimalista de la imagen */
+    body {
+        font-family: sans-serif;
+        background: #0d0d0d; /* Fondo negro muy oscuro */
+        color: #eee;
+        display: flex;
+        justify-content: center;
+        align-items: center; /* Centrar verticalmente */
+        min-height: 100vh;
+        margin: 0;
+    }
+    #player {
+        width: 600px;
+        max-width: 90%;
+    }
+    #controls {
+        display: flex;
+        align-items: center;
+        margin-top: 20px;
+    }
+    #playPause {
+        margin-right: 15px;
+        padding: 8px 20px;
+        cursor: pointer;
+        border: 2px solid #00c3ff; /* Borde azul brillante */
+        background: #111;
+        color: #00c3ff; /* Texto azul brillante */
+        border-radius: 20px;
+        font-weight: bold;
+        transition: background 0.2s;
+    }
+    #playPause:hover {
+        background: #00c3ff;
+        color: #111;
+    }
+    #progressContainer {
+        flex: 1;
+        height: 6px;
+        background: #333;
+        cursor: pointer;
+        border-radius: 3px;
+        position: relative;
+    }
+    #progress {
+        background: #00c3ff; /* Color azul brillante para progreso */
+        height: 100%;
+        width: 0%;
+        border-radius: 3px;
+    }
+    #visualizer {
+        display: block;
+        margin-top: 30px;
+        width: 100%;
+        height: 100px;
+        background: #111;
+        border-radius: 8px;
+        box-shadow: 0 0 15px rgba(0, 195, 255, 0.1);
+    }
+</style>
+</head>
+<body>
+
+<div id="player">
+    <audio id="audio" src="Be The Adam and Eve Of This Stone World.mp3"></audio>
+
+    <div id="controls">
+        <button id="playPause">Play</button>
+        <div id="progressContainer">
+            <div id="progress"></div>
+        </div>
+    </div>
+
+    <canvas id="visualizer"></canvas>
+</div>
+
+<script>
+const audio = document.getElementById('audio');
+const playPauseBtn = document.getElementById('playPause');
+const progressContainer = document.getElementById('progressContainer');
+const progress = document.getElementById('progress');
+const canvas = document.getElementById('visualizer');
+const ctx = canvas.getContext('2d');
+
+// AudioContext y Analyser
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+const analyser = audioCtx.createAnalyser();
+
+// 🚨 CORRECCIÓN IMPLEMENTADA 🚨
+// El valor mínimo permitido es 32. Esto nos da 16 valores de frecuencia (bufferLength).
+analyser.fftSize = 32; 
+
+const bufferLength = analyser.frequencyBinCount; // Es 16
+const dataArray = new Uint8Array(bufferLength);
+
+// Conectamos la fuente *solo una vez*
+audio.sourceNode = null;
+audio.oncanplay = () => {
+    if (!audio.sourceNode) { 
+        audio.sourceNode = audioCtx.createMediaElementSource(audio);
+        audio.sourceNode.connect(analyser);
+        analyser.connect(audioCtx.destination);
+    }
+};
+
+
+// Play / Pause con manejo de Promesa y AudioContext
+playPauseBtn.addEventListener('click', () => {
+    if(audioCtx.state === 'suspended') {
+        audioCtx.resume();
+    }
+    
+    if(audio.paused) {
+        audio.play().then(() => {
+            playPauseBtn.textContent = 'Pause';
+        }).catch(error => {
+            console.error("Error al intentar reproducir el audio. Verifica la consola para más detalles.", error);
+            alert("No se pudo reproducir la música. Asegúrate de que el archivo 'Be The Adam and Eve Of This Stone World.mp3' esté en la misma carpeta.");
+            playPauseBtn.textContent = 'Play'; 
+        });
+    } else {
+        audio.pause();
+        playPauseBtn.textContent = 'Play';
+    }
+});
+// -------------------------------------------------------------
+
+// Barra de progreso
+function updateProgress() {
+    if (!isNaN(audio.duration)) {
+        const percent = (audio.currentTime / audio.duration) * 100;
+        progress.style.width = percent + '%';
+    }
+}
+audio.addEventListener('timeupdate', updateProgress);
+
+// Funcionalidad de arrastrar progreso
+let isDragging = false;
+progressContainer.addEventListener('mousedown', e => { 
+    if (!isNaN(audio.duration)) {
+        isDragging = true; 
+        setProgress(e); 
+    }
+});
+window.addEventListener('mousemove', e => { 
+    if(isDragging && !isNaN(audio.duration)) { 
+        setProgress(e); 
+    }
+});
+window.addEventListener('mouseup', () => isDragging = false);
+
+function setProgress(e) {
+    const rect = progressContainer.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const percent = Math.max(0, Math.min(1, x / rect.width));
+    audio.currentTime = percent * audio.duration;
+}
+
+// Función para dibujar rectángulos redondeados (para la forma de píldora)
+function drawRoundedRect(x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.lineTo(x + w - r, y);
+    ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+    ctx.lineTo(x + w, y + h - r);
+    ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+    ctx.lineTo(x + r, y + h);
+    ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+    ctx.lineTo(x, y + r);
+    ctx.quadraticCurveTo(x, y, x + r, y);
+    ctx.closePath();
+    ctx.fill();
+}
+
+function resizeCanvas() {
+    canvas.width = canvas.offsetWidth;
+    canvas.height = canvas.offsetHeight;
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+function draw() {
+    requestAnimationFrame(draw);
+    analyser.getByteFrequencyData(dataArray);
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = '#111';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    const centerY = canvas.height / 2;
+    const centerX = canvas.width / 2;
+    
+    // Configuraciones de estilo
+    const numBarsToDraw = 8; // Mantiene el look de solo 8 barras a cada lado (de las 16 disponibles)
+    const barWidth = 8; 
+    const barSpacing = 12;
+    const radius = barWidth / 2;
+    const maxBarHeight = canvas.height * 0.45;
+
+    // Aplicar efecto Glow (Brillo)
+    const glowColor = '#00c3ff';
+    ctx.fillStyle = glowColor;
+    ctx.shadowColor = glowColor;
+    ctx.shadowBlur = 12;
+
+    for(let i = 0; i < numBarsToDraw; i++) { // Bucle limitado a 8 para el minimalismo
+        const value = dataArray[i];
+        
+        const barHeight = Math.max(1, (value / 255) * maxBarHeight); 
+        const totalHeight = barHeight * 2;
+        const yTop = centerY - barHeight;
+
+        const distance = i * (barWidth + barSpacing) + (barSpacing / 2);
+        const xLeft = centerX - distance - barWidth;
+        const xRight = centerX + distance;
+
+        // Dibuja la barra izquierda y derecha
+        drawRoundedRect(xLeft, yTop, barWidth, totalHeight, radius);
+        drawRoundedRect(xRight, yTop, barWidth, totalHeight, radius);
+    }
+    
+    // Desactivar el glow
+    ctx.shadowBlur = 0; 
+}
+draw();
+</script>
+
+</body>
+</html>

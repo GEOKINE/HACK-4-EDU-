@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HablaIA</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div class="titulo">
+            <h1>HablaIA</h1>
+        </div>
+        <div class="botones">
+            <button class="btn iniciar">Iniciar sesión</button>
+            <button class="btn registrar">Registrarse</button>
+        </div>
+    </header>
+
+    <section class="carrusel">
+        <div class="slides">
+            <div class="slide active">
+                <img src="img1.jpg" alt="Imagen 1 promocional">
+            </div>
+            <div class="slide">
+                <img src="img2.jpg" alt="Imagen 2 promocional">
+            </div>
+            <div class="slide">
+                <img src="img3.jpg" alt="Imagen 3 promocional">
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>© 2025 HablaIA</p>
+    </footer>
+
+    <script>
+        // Carrusel automático
+        let index = 0;
+        const slides = document.querySelectorAll('.slide');
+
+        function cambiarSlide() {
+            slides[index].classList.remove('active');
+            index = (index + 1) % slides.length;
+            slides[index].classList.add('active');
+        }
+
+        setInterval(cambiarSlide, 3000);
+    </script>
+</body>
+</html>
+
+
